@@ -7,6 +7,7 @@ const parseString = require('xml2js').parseString;
 
 // respond with "hello world" when a GET request is made to the homepage
 app.get('/', (req, res) => {
+    let kathimarini,tovima
     axios.get('https://feeds.feedburner.com/kathimerini/DJpy')
         .then(function (response) {
             let xml=response.data
@@ -14,16 +15,22 @@ app.get('/', (req, res) => {
             parseString(xml, function (err, result) {
                 js=result
             });
-            res.json(fireParser.kathimerini(js))
+            kathimarini=(fireParser.kathimerini(js))
 
         })
-        .catch(function (error) {
-            // handle error
-            console.log(error);
+    axios.get('https://www.tovima.gr/tag/news-feed/feed/')
+        .then(function (response) {
+            let xml=response.data
+            let js
+            parseString(xml, function (err, result) {
+                js=result
+                console.log(result)
+            });
+            tovima=fireParser.tovima(js)
+
         })
-        .then(function () {
-            // always executed
-        });
+    res.json(tovima)
+
 
 
 })
